@@ -1,0 +1,55 @@
+version: '3'
+services:
+  web:
+    build: .
+    container_name: django_stripe
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app_network
+    env_file:
+      - ./.env
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - STRIPE_PUBLIC_KEY=pk_test_...
+      - STRIPE_SECRET_KEY=sk_test_...
+
+  db:
+    image: postgis/postgis:13-3.3-alpine  
+    container_name: db
+    env_file:
+      - ./.env
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app_network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+
+volumes:
+  web:
+  postgres_data:
+
+networks:
+  app_network:
+    driver: bridge
