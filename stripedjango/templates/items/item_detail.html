@@ -1,0 +1,101 @@
+<html>
+<head>
+    <title>Buy {{ item.name }}</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        /* Общие настройки */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center; /* Центрируем содержимое по горизонтали */
+            align-items: center; /* Центрируем содержимое по вертикали */
+            height: 100vh; /* Занимаем всю высоту viewport */
+            background-color: #f4f4f9; /* Приятный светло-голубой фон */
+        }
+
+        /* Блок с контентом */
+        .content {
+            text-align: center; /* Центрируем текст внутри блока */
+            background: #ffffff; /* Фон блока белый */
+            padding: 2rem; /* Отступы внутри блока */
+            border-radius: 10px; /* Скругленные углы */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Тени для эффекта объема */
+            width: 100%; /* Ширина блока */
+            max-width: 400px; /* Максимальная ширина блока */
+        }
+
+        /* Заголовок */
+        h1 {
+            font-size: 2rem;
+            color: #333333;
+            margin-bottom: 1rem;
+        }
+
+        /* Описание товара */
+        p {
+            font-size: 1rem;
+            color: #555555;
+            margin-bottom: 1rem;
+        }
+
+        /* Цена */
+        .price {
+            font-size: 1.5rem;
+            color: #28a745; /* Зеленый цвет для цены */
+            font-weight: bold;
+            margin-bottom: 2rem;
+        }
+
+        /* Кнопка "Купить" */
+        #buy-button {
+            background-color: #007bff; /* Голубой цвет кнопки */
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* Плавный переход при наведении */
+        }
+
+        /* Эффект при наведении на кнопку */
+        #buy-button:hover {
+            background-color: #0056b3; /* Темный голубой цвет при наведении */
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h1>{{ item.name }}</h1>
+        <p>{{ item.description }}</p>
+        <p class="price">{{ item.price }} {{ item.currency|upper }}</p>
+        <div id="card-element" class="stripe-card-field"></div>
+        <button id="buy-button">Купить</button>
+    </div>
+
+    <script type="text/javascript">
+        var stripe = Stripe('{{ stripe_public_key }}');
+        var clientSecret = "{{ client_secret }}";
+        var buyButton = document.getElementById('buy-button');
+
+        buyButton.addEventListener('click', function () {
+            // Отправляем AJAX-запрос для создания Checkout Session
+            fetch('/buy/{{ item.id }}/', { method: 'GET' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.id) {
+                        // Перенаправляем пользователя на форму оплаты
+                        stripe.redirectToCheckout({ sessionId: data.id });
+                    } else {
+                        console.error("Failed to create checkout session:", data);
+                    }
+                })
+                .catch(error => {
+                    console.error("Error during fetch:", error);
+                });
+        });
+    </script>
+</body>
+</html>

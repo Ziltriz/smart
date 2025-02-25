@@ -19,6 +19,11 @@ class Discount(models.Model):
 
     def __str__(self):
         return self.name
+    
+    class Meta:
+        verbose_name ='Скидка'
+        verbose_name_plural='Скидки'
+        
 
 class Tax(models.Model):
     name = models.CharField(max_length=255)
@@ -26,6 +31,10 @@ class Tax(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name ='Сервисный сбор'
+        verbose_name_plural='Сервисные сборы'
 
 class Order(models.Model):
     items = models.ManyToManyField('Item', related_name='orders')
@@ -43,5 +52,9 @@ class Order(models.Model):
         return total
 
     def __str__(self):
-        return f"Order #{self.id}"
+        return f"Заказ #{self.id}"
+    
+    class Meta:
+        verbose_name ='Заказ'
+        verbose_name_plural='Заказы'
     

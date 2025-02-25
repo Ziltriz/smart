@@ -20,8 +20,8 @@ services:
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
-      - STRIPE_PUBLIC_KEY=pk_test_...
-      - STRIPE_SECRET_KEY=sk_test_...
+      - STRIPE_PUBLIC_KEY=${STRIPE_PUBLIC_KEY}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
 
   db:
     image: postgis/postgis:13-3.3-alpine  
