@@ -16,7 +16,15 @@ class OrderAdmin(admin.ModelAdmin):
 
 @admin.register(Discount)
 class DiscountAdmin(admin.ModelAdmin):
-    list_display = ('name', 'percentage')
+    list_display = ('name', 'get_percentage', 'amount_off', 'currency', 'duration', 'duration_in_months')
+   
+    def get_percentage(self, obj):
+        return f"{obj.percentage}%" if obj.percentage is not None else "—"
+
+    get_percentage.short_description = 'Percentage Off'
+
+    list_filter = ('duration',)
+    search_fields = ('name',)
 
 @admin.register(Tax)
 class TaxAdmin(admin.ModelAdmin):
