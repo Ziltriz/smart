@@ -91,8 +91,8 @@ GET /item/{id}, c помощью которого можно получить п
 Склонируйте репозиторий проекта:
 
 ```bash
-git clone https://github.com/your-repo-url/stripe-payment.git
-cd stripe-payment
+git clone https://github.com/Ziltriz/smart.git
+cd smart/srtipedjango
 ```
 
 ### 2. Настройка переменных окружения
