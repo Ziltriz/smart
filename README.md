@@ -1,4 +1,3 @@
-# smart
 # Тестовое задание: Django + Stripe API
 
 ## Описание
